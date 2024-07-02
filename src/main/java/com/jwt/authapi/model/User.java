@@ -1,9 +1,13 @@
 package com.jwt.authapi.model;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Collection;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,10 +18,11 @@ import jakarta.persistence.GenerationType;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false)
     private Integer id;
 
     @Column(nullable = false)
@@ -36,6 +41,11 @@ public class User {
     @UpdateTimestamp
     @Column(name = "Updated_at")
     private Date updatedAt;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        return List.of();
+    }
 
     //setting up the getters and setters.
     public Integer getId() {
@@ -76,6 +86,31 @@ public class User {
 
     public Date getUpdatedAt() {
         return updatedAt;
+    }
+
+    @Override
+    public String getUsername(){
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired(){
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked(){
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired(){
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled(){
+        return true;
     }
 }
 
