@@ -6,9 +6,10 @@ import java.util.Map;
 import java.util.Date;
 import java.security.Key;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.jwt.authapi.configs.JwtConfig;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,11 +20,17 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class jwtservice {
 
-    @Value("${security.jwt.secret-key}")
-    private String secretKey;
+    private final JwtConfig jwtConfig;
 
-    @Value("${security.jwt.expiration-time}")
-    private long jwtExpiration;
+    public jwtservice(JwtConfig jwtConfig){
+        this.jwtConfig = jwtConfig;
+    }
+
+    // @Value("${security.jwt.secret-key}")
+    // private String secretKey;
+
+    // @Value("${security.jwt.expiration-time}")
+    // private long jwtExpiration;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -39,11 +46,11 @@ public class jwtservice {
     }
 
     public String generateToken(Map<String , Object> extraClaims , UserDetails userDetails){
-        return buildToken(extraClaims , userDetails , jwtExpiration);
+        return buildToken(extraClaims , userDetails , jwtConfig.getExpirationTime());
     }
 
     public long getExpirationTime() {
-        return jwtExpiration;
+        return jwtConfig.getExpirationTime();
     }
 
     private String buildToken(
@@ -83,7 +90,7 @@ public class jwtservice {
     }
 
     private Key getSignInKey(){
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtConfig.getSecretKey());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
