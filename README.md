@@ -2,4 +2,5 @@
 This Repository is used for references in the sector of JWT Security.
 
 ## Video Walkthrough : 
-![Watch the Video Walkthrough](https://github.com/lgsurith/spring-auth-ref/blob/main/results/reference_video.mp4)
+https://github.com/lgsurith/spring-auth-ref/assets/117572209/d4515065-f0a4-4998-8a27-7488c0211eff
+
